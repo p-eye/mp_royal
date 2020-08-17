@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"log"
-	"github.com/mp_royal/configs"
-	"github.com/mp_royal/models"
+	"mp_royal/configs"
+	"mp_royal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
