@@ -6,8 +6,8 @@ type Release struct {
 	gorm.Model
 	Type string
 	Name string
-	Year uint
-	Month uint
+	ReleaseYear uint
+	ReleaseMonth uint
 	Sex string
 	ImgUrl string
 }
