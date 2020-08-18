@@ -7,4 +7,5 @@ import (
 
 func SetHairRouters(router *gin.RouterGroup) {
 	router.GET("/cycle", controllers.GetHairCycle)
+	router.GET("/date", controllers.GetHairDate)
 }
