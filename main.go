@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"log"
 	"mp_royal/configs"
 	"mp_royal/models"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 func main() {
@@ -21,7 +21,8 @@ func main() {
 		log.Println(err)
 	}
 
-	configs.DB.AutoMigrate(&models.Release{}, &models.MonthlyFace{}, &models.MonthlyHair{})
+	configs.DB.AutoMigrate(&models.HairRelease{}, models.FaceRelease{}, &models.MonthlyFace{}, &models.MonthlyHair{})
+
 	r.Run(":8080")
 }
 

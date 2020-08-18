@@ -2,12 +2,22 @@ package models
 
 import "gorm.io/gorm"
 
-type Release struct {
+type HairRelease struct {
 	gorm.Model
-	Type string
 	Name string
 	ReleaseYear uint
 	ReleaseMonth uint
 	Sex string
 	ImgUrl string
+	MonthlyHairs []MonthlyHair
+}
+
+type FaceRelease struct {
+	gorm.Model
+	Name string
+	ReleaseYear uint
+	ReleaseMonth uint
+	Sex string
+	ImgUrl string
+	MonthlyFaces []MonthlyFace
 }
