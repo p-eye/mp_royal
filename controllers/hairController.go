@@ -21,12 +21,12 @@ type HairRelease struct {
 
 func GetHairCycle(c *gin.Context) {
 	var hairRelease HairRelease
-	var monthlyHaris []MonthlyHair
+	var monthlyHairs []MonthlyHair
 	id := c.PostForm("id")
 
 	configs.DB.Where("id = ?", id).First(&hairRelease)
-	configs.DB.Where("hair_release_id = ?", id).Find(&monthlyHaris)
-	hairRelease.MonthlyHairs = monthlyHaris
+	configs.DB.Where("hair_release_id = ?", id).Find(&monthlyHairs)
+	hairRelease.MonthlyHairs = monthlyHairs
 
 	//configs.DB.Model(&hairRelease).Association("monthly_hairs").Find(&hairRelease.MonthlyHairs)
 	c.JSON(http.StatusOK, gin.H{
