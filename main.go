@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"log"
 	"mp_royal/configs"
 	"mp_royal/models"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"mp_royal/routers"
 )
 
 func main() {
@@ -22,6 +23,9 @@ func main() {
 	}
 
 	configs.DB.AutoMigrate(&models.HairRelease{}, models.FaceRelease{}, &models.MonthlyFace{}, &models.MonthlyHair{})
+
+	rGroup := r.Group("/v1")
+	routers.SetHairRouters(rGroup.Group("/hairs"))
 
 	r.Run(":8080")
 }
