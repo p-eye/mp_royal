@@ -15,7 +15,6 @@ type MonthlyHair struct {
 type HairRelease struct {
 	ID              uint   `json:"hairId"`
 	Name            string `json:"hairName"`
-	ImgUrl          string `json:"hairImgUrl"`
 	MonthlyHairs []MonthlyHair
 }
 
@@ -37,7 +36,7 @@ func GetHairCycle(c *gin.Context) {
 type Hair struct {
 	ID uint `json:"hairId"`
 	Name string `json:"hairName"`
-	ImgUrl string `json:"hairImageURl"`
+	Dates []string
 }
 
 type HairDate struct {
@@ -46,17 +45,51 @@ type HairDate struct {
 	Hairs []Hair
 }
 
+type Request struct {
+	Year uint
+	Month uint
+}
 
 func GetHairDate(c *gin.Context) {
-	var hairDate HairDate
+	var request Request
+	var hairs []Hair
+	c.ShouldBindJSON(&request)
 
-	c.ShouldBindJSON(&hairDate)
+
 	configs.DB.Table("hair_releases").
-		Select("hair_releases.id, name, img_url").
+		Select("hair_releases.id, name").
 		Joins("join monthly_hairs on hair_releases.id = monthly_hairs.hair_release_id").
-		Where("monthly_hairs.year = ? and monthly_hairs.month = ?", hairDate.Year, hairDate.Month).
-		Scan(&hairDate.Hairs)
+		Where("monthly_hairs.year = ? and monthly_hairs.month = ?", request.Year, request.Month).
+		Find(&hairs)
+
+	for i, _ := range hairs {
+		configs.DB.Table("monthly_hairs").
+			Select("concat(year, '-', month)").
+			Where("hair_release_id = ?", hairs[i].ID).
+			Scan(&hairs[i].Dates)
+	}
+
+/*
+	for i, _ := range hairs {
+		configs.DB.Table("monthly_hairs").
+			Select("year").
+			Where("hair_release_id = ?", hairs[i].ID).
+			Scan(&hairs[i].Date)
+	}
+*/
+	//configs.DB.Model(&hairs).Association("Comments").Find()
+/*
+	for i, _ := range hairs {
+		configs.DB.Table("monthly_hairs").
+			Select("year, month").
+			Where("hair_release_id = ?", hairs[i].ID).
+			Preload(clause.Associations).
+			Scan(&hairs)
+	}
+
+*/
+
 	c.JSON(http.StatusOK, gin.H{
-		"data": hairDate,
+		"data": hairs,
 	})
 }
