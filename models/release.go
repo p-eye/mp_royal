@@ -8,7 +8,6 @@ type HairRelease struct {
 	ReleaseYear uint
 	ReleaseMonth uint
 	Sex string
-	ImgUrl string
 	MonthlyHairs []MonthlyHair
 }
 
@@ -18,6 +17,5 @@ type FaceRelease struct {
 	ReleaseYear uint
 	ReleaseMonth uint
 	Sex string
-	ImgUrl string
 	MonthlyFaces []MonthlyFace
 }
