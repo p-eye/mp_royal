@@ -38,7 +38,7 @@ type Response struct {
 	ID uint `json:"hairId"`
 	Name string `json:"hairName"`
 	ImgUrl string `json:"hairImgUrl"`
-	Dates []string
+	Date map[int][]int
 }
 
 type Request struct {
@@ -51,7 +51,6 @@ func GetHairDate(c *gin.Context) {
 	var responses []Response
 	c.ShouldBindJSON(&request)
 
-
 	configs.DB.Table("hair_releases").
 		Select("hair_releases.id, name").
 		Joins("join monthly_hairs on hair_releases.id = monthly_hairs.hair_release_id").
@@ -59,10 +58,27 @@ func GetHairDate(c *gin.Context) {
 		Find(&responses)
 
 	for i, _ := range responses {
+		responses[i].Date = make(map[int][]int)
+		rows, err := configs.DB.Table("monthly_hairs").
+			Select("year, month").
+			Where("hair_release_id = ?", responses[i].ID).
+			Rows()
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		for rows.Next() {
+			var year int
+			var month int
+			rows.Scan(&year, &month)
+			responses[i].Date[year] = append(responses[i].Date[year], month)
+		}
+		/*
 		configs.DB.Table("monthly_hairs").
 			Select("concat(year, '-', month)").
 			Where("hair_release_id = ?", responses[i].ID).
 			Scan(&responses[i].Dates)
+		 */
 		responses[i].ImgUrl = GetHairImg(25017)
 	}
 
